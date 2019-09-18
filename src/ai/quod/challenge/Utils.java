@@ -24,8 +24,8 @@ public final class Utils {
             e.printStackTrace();
             throw new IllegalArgumentException("Invalid Date Format. Make sure it is UTC YYYY-MM-DDThh:mm:ssZ");
         }
-        if (dtComponents[1] > 12 || dtComponents[2] > 23) {
-            throw new IllegalArgumentException("Invalid Date Format. Make sure it is UTC YYYY-MM-DDThh:mm:ssZ");
+        if (dtComponents[1] > 12 || dtComponents[2] > getDaysInMonthYear(dtComponents[1], dtComponents[0]) || dtComponents[3] > 23) {
+            throw new IllegalArgumentException("Invalid Date. Make sure you enter a valid calendar date.");
         }
         return dtComponents;
     }
@@ -50,29 +50,26 @@ public final class Utils {
             if (y > startDtComponents[0]) {
                 m = 1;
             }
-            while (m <= endDtComponents[1] || y < endDtComponents[0]) {
+            while (m <= endDtComponents[1] || y < endDtComponents[0] && m <= 12) {
                 if (y > startDtComponents[0] || m > startDtComponents[1]) {
                     d = 1;
                 }
-                while (d <= endDtComponents[2] || (m < endDtComponents[1] && y < endDtComponents[0])) {
-                    if (d == startDtComponents[2] && d == endDtComponents[2]) {
+                while (d <= endDtComponents[2] ||
+                        (m < endDtComponents[1] || y < endDtComponents[0]) && d <= getDaysInMonthYear(m, y)) {
+                    if (d == startDtComponents[2] && d == endDtComponents[2] && m == endDtComponents[1]) {
                         queryStrings.add(getQueryString(y, m, d, startDtComponents[3], endDtComponents[3]));
                         break;
-                    } else if (d == startDtComponents[2]) {
+                    } else if (d == startDtComponents[2] && m == startDtComponents[1]) {
                         queryStrings.add(getQueryString(y, m, d, startDtComponents[3], 23));
-                    } else if (d == endDtComponents[2]) {
+                    } else if (d == endDtComponents[2] && m == endDtComponents[1]) {
                         queryStrings.add(getQueryString(y, m, d, 0, endDtComponents[3]));
                         break;
                     } else {
                         queryStrings.add(getQueryString(y, m, d, 0, 23));
                     }
-                    if (d < getDaysInMonthYear(m, y)) {
-                        d++;
-                    }
+                    d++;
                 }
-                if (m < 12) {
-                    m++;
-                }
+                m++;
             }
             y++;
         }
