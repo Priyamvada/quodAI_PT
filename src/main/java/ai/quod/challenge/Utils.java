@@ -1,7 +1,6 @@
 package ai.quod.challenge;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public final class Utils {

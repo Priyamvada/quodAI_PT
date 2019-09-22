@@ -4,7 +4,6 @@ import ai.quod.challenge.Utils;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Iterator;
 import java.util.List;
 
 public class Session {
